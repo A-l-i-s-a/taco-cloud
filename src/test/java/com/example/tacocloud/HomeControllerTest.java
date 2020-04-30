@@ -1,5 +1,6 @@
 package com.example.tacocloud;
 
+import com.example.tacocloud.controller.HomeController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

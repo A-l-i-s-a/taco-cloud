@@ -1,9 +1,7 @@
-package com.example.tacocloud;
+package com.example.tacocloud.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import javax.validation.constraints.Size;
 
 @Controller
 public class HomeController {
