@@ -19,19 +19,21 @@ import java.util.stream.Collectors;
 
 import static com.example.tacocloud.model.Ingredient.Type;
 
-@Slf4j
 @Controller
 @RequestMapping("/design")
 @SessionAttributes("order")
 public class DesignTacoController {
 
     private final IngredientRepository ingredientRepo;
-    private TacoRepository designRepo;
+
+    private TacoRepository tacoRepo;
 
     @Autowired
-    public DesignTacoController(IngredientRepository ingredientRepo, TacoRepository designRepo) {
+    public DesignTacoController(
+            IngredientRepository ingredientRepo,
+            TacoRepository tacoRepo) {
         this.ingredientRepo = ingredientRepo;
-        this.designRepo = designRepo;
+        this.tacoRepo = tacoRepo;
     }
 
     @ModelAttribute(name = "order")
@@ -39,14 +41,16 @@ public class DesignTacoController {
         return new Order();
     }
 
-    @ModelAttribute(name = "taco")
-    public Taco taco() {
+    @ModelAttribute(name = "design")
+    public Taco design() {
         return new Taco();
     }
 
     @GetMapping
     public String showDesignForm(Model model) {
         List<Ingredient> ingredients = new ArrayList<>();
+        Ingredient ingredient = ingredientRepo.findById("GRBF").get();
+        System.out.println(ingredient.getType());
         ingredientRepo.findAll().forEach(ingredients::add);
 
         Type[] types = Ingredient.Type.values();
@@ -54,7 +58,23 @@ public class DesignTacoController {
             model.addAttribute(type.toString().toLowerCase(),
                     filterByType(ingredients, type));
         }
+
         return "design";
+    }
+
+    @PostMapping
+    public String processDesign(
+            @Valid Taco taco, Errors errors,
+            @ModelAttribute Order order) {
+
+        if (errors.hasErrors()) {
+            return "design";
+        }
+
+        Taco saved = tacoRepo.save(taco);
+        order.addDesign(saved);
+
+        return "redirect:/orders/current";
     }
 
     private List<Ingredient> filterByType(
@@ -63,18 +83,5 @@ public class DesignTacoController {
                 .stream()
                 .filter(x -> x.getType().equals(type))
                 .collect(Collectors.toList());
-    }
-
-    @PostMapping
-    public String processDesign(@Valid Taco taco, Errors errors, @ModelAttribute Order order) {
-        if (errors.hasErrors()) {
-            return "design";
-        }
-        // Save the taco design…
-        // We'll do this in chapter 3
-        log.info("Processing design: " + taco);
-        Taco saved = designRepo.save(taco);
-        order.addDesign(saved);
-        return "redirect:/orders/current";
     }
 }
