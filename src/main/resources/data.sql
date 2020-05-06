@@ -1,16 +1,39 @@
-delete from Taco_Order_Tacos;
-delete from Taco_Ingredients;
-delete from Taco;
-delete from Taco_Order;
-delete from Ingredient;
+INSERT INTO public.ingredient(id, name, type)
+	VALUES ('FLTO', 'Flour Tortilla', 0)
+    on conflict do nothing;
 
-insert into Ingredient (id, name, type) values ('FLTO', 'Flour Tortilla', 0);
-insert into Ingredient (id, name, type) values ('COTO', 'Corn Tortilla', 0);
-insert into Ingredient (id, name, type) values ('GRBF', 'Ground Beef', 1);
-insert into Ingredient (id, name, type) values ('CARN', 'Carnitas', 1);
-insert into Ingredient (id, name, type) values ('TMTO', 'Diced Tomatoes', 2);
-insert into Ingredient (id, name, type) values ('LETC', 'Lettuce', 2);
-insert into Ingredient (id, name, type) values ('CHED', 'Cheddar', 3);
-insert into Ingredient (id, name, type) values ('JACK', 'Monterrey Jack', 3);
-insert into Ingredient (id, name, type) values ('SLSA', 'Salsa', 4);
-insert into Ingredient (id, name, type) values ('SRCR', 'Sour Cream', 4);
+INSERT INTO public.ingredient(id, name, type)
+	VALUES ('COTO', 'Corn Tortilla', 0)
+    on conflict do nothing;
+
+INSERT INTO public.ingredient(id, name, type)
+	VALUES ('GRBF', 'Ground Beef', 1)
+    on conflict do nothing;
+
+INSERT INTO public.ingredient(id, name, type)
+	VALUES ('CARN', 'Carnitas', 1)
+    on conflict do nothing;
+
+INSERT INTO public.ingredient(id, name, type)
+	VALUES ('TMTO', 'Diced Tomatoes', 2)
+    on conflict do nothing;
+
+INSERT INTO public.ingredient(id, name, type)
+	VALUES ('LETC', 'Lettuce', 2)
+    on conflict do nothing;
+
+INSERT INTO public.ingredient(id, name, type)
+	VALUES ('CHED', 'Cheddar', 3)
+    on conflict do nothing;
+
+INSERT INTO public.ingredient(id, name, type)
+	VALUES ('JACK', 'Monterrey Jack', 3)
+    on conflict do nothing;
+
+INSERT INTO public.ingredient(id, name, type)
+	VALUES ('SLSA', 'Salsa', 4)
+    on conflict do nothing;
+
+INSERT INTO public.ingredient(id, name, type)
+	VALUES ('SRCR', 'Sour Cream', 4)
+    on conflict do nothing;

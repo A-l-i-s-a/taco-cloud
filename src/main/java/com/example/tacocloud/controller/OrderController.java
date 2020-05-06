@@ -27,6 +27,7 @@ public class OrderController {
     @GetMapping("/current")
     public String orderForm(@AuthenticationPrincipal User user,
                             @ModelAttribute Order order) {
+        log.info("===start===");
         if (order.getName() == null) {
             order.setName(user.getFullname());
         }
@@ -42,7 +43,7 @@ public class OrderController {
         if (order.getZip() == null) {
             order.setZip(user.getZip());
         }
-
+        log.info("===end===");
         return "orderForm";
     }
 
@@ -50,6 +51,7 @@ public class OrderController {
     @PostMapping
     public String processOrder(@Valid Order order, Errors errors, SessionStatus sessionStatus, @AuthenticationPrincipal User user) {
         if (errors.hasErrors()) {
+            log.info("===errors 2===");
             return "orderForm";
         }
         order.setUser(user);

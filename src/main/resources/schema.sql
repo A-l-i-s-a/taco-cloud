@@ -1,38 +1,102 @@
-create table if not exists Ingredient (
- id varchar(4) not null,
- name varchar(25) not null,
- type integer not null
-);
+-- Table: public.app_user
 
-create table if not exists Taco (
- id identity,
- name varchar(50) not null,
- created_At timestamp not null
-);
+-- DROP TABLE public.app_user;
 
-create table if not exists Taco_Ingredients (
- taco bigint not null,
- ingredient varchar(4) not null
-);
-alter table Taco_Ingredients add foreign key (taco) references Taco(id);
-alter table Taco_Ingredients add foreign key (ingredient) references Ingredient(id);
-create table if not exists Taco_Order (
- id identity,
- name varchar(50) not null,
- street varchar(50) not null,
- city varchar(50) not null,
- state varchar(2) not null,
- zip varchar(10) not null,
- cc_Number varchar(16) not null,
- cc_Expiration varchar(5) not null,
- ccCVV varchar(3) not null,
- placed_At timestamp not null
-);
+CREATE TABLE IF NOT EXISTS public.app_user
+(
+    id bigint NOT NULL,
+    city character varying(255) COLLATE pg_catalog."default",
+    fullname character varying(255) COLLATE pg_catalog."default",
+    password character varying(255) COLLATE pg_catalog."default",
+    phone_number character varying(255) COLLATE pg_catalog."default",
+    state character varying(255) COLLATE pg_catalog."default",
+    street character varying(255) COLLATE pg_catalog."default",
+    username character varying(255) COLLATE pg_catalog."default",
+    zip character varying(255) COLLATE pg_catalog."default",
+    CONSTRAINT app_user_pkey PRIMARY KEY (id)
+)
 
-create table if not exists Taco_Order_Tacos (
- tacoOrder bigint not null,
- taco bigint not null
-);
+TABLESPACE pg_default;
 
-alter table Taco_Order_Tacos add foreign key (tacoOrder) references Taco_Order(id);
-alter table Taco_Order_Tacos add foreign key (taco) references Taco(id);
+ALTER TABLE public.app_user
+    OWNER to root;
+
+-- Table: public.ingredient
+
+-- DROP TABLE public.ingredient;
+
+CREATE TABLE  IF NOT EXISTS  public.ingredient
+(
+    id character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    name character varying(255) COLLATE pg_catalog."default",
+    type integer,
+    CONSTRAINT ingredient_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.ingredient
+    OWNER to root;
+
+-- Table: public.taco
+
+-- DROP TABLE public.taco;
+
+CREATE TABLE IF NOT EXISTS public.taco
+(
+    id bigint NOT NULL,
+    created_at timestamp without time zone,
+    name character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT taco_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.taco
+    OWNER to root;
+
+-- Table: public.taco_ingredients
+
+-- DROP TABLE public.taco_ingredients;
+
+CREATE TABLE IF NOT EXISTS public.taco_ingredients
+(
+    taco_id bigint NOT NULL,
+    ingredients_id character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT fk27rycuh3mjaepnba0j6m8xl4q FOREIGN KEY (taco_id)
+        REFERENCES public.taco (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fk7y679y77n5e75s3ss1v7ff14j FOREIGN KEY (ingredients_id)
+        REFERENCES public.ingredient (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.taco_ingredients
+    OWNER to root;
+
+-- Table: public.taco_order_tacos
+
+-- DROP TABLE public.taco_order_tacos;
+
+CREATE TABLE IF NOT EXISTS public.taco_order_tacos
+(
+    order_id bigint NOT NULL,
+    tacos_id bigint NOT NULL,
+    CONSTRAINT fkcxwvdkndaqmrxcen10vkneexo FOREIGN KEY (order_id)
+        REFERENCES public.taco_order (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT fkfwvqtnjfview9e5f7bfqtd1ns FOREIGN KEY (tacos_id)
+        REFERENCES public.taco (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.taco_order_tacos
+    OWNER to root;
