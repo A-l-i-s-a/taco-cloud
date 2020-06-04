@@ -4,15 +4,17 @@ import com.example.tacocloud.model.Order;
 import com.example.tacocloud.model.Taco;
 import com.example.tacocloud.repository.OrderRepository;
 import com.example.tacocloud.repository.TacoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -28,9 +30,15 @@ public class DesignTacoController {
     }
 
     @GetMapping("/recent")
-    public Iterable<Taco> recentTacos() {
+    public Iterable<EntityModel<Taco>> recentTacos() {
         PageRequest pageRequest = PageRequest.of(0, 12, Sort.by("createdAt").descending());
-        return tacoRepository.findAll(pageRequest).getContent();
+        List<Taco> tacos = tacoRepository.findAll(pageRequest).getContent();
+        CollectionModel<EntityModel<Taco>> recentResources = CollectionModel.wrap(tacos);
+        recentResources.add(
+                WebMvcLinkBuilder.linkTo(DesignTacoController.class)
+                        .slash("recent")
+                        .withRel("recents"));
+        return recentResources;
     }
 
     @GetMapping("/{id}")
@@ -50,7 +58,7 @@ public class DesignTacoController {
         return orderRepository.save(order);
     }
 
-    @PatchMapping(path = "/{orderId}", consumes="application/json")
+    @PatchMapping(path = "/{orderId}", consumes = "application/json")
     public Order patchOrder(@PathVariable("orderId") Long orderId, @RequestBody Order patch) {
         Order order = orderRepository.findById(orderId).get();
         if (patch.getName() != null) {
